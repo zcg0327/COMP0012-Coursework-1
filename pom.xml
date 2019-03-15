@@ -72,27 +72,50 @@
         </executions>
       </plugin>
 
-      <!--TODO: CUP-->
-      <!--<plugin>-->
-      <!--<groupId>com.github.vbmacher</groupId>-->
-      <!--<artifactId>cup-maven-plugin</artifactId>-->
-      <!--<version>11b-20160615</version>-->
-      <!--<executions>-->
-      <!--<execution>-->
-      <!--<goals>-->
-      <!--<goal>generate</goal>-->
-      <!--</goals>-->
-      <!--</execution>-->
-      <!--</executions>-->
-      <!--<configuration>-->
-      <!--<className>Parser</className>-->
-      <!--<symbolsName>sym</symbolsName>-->
-      <!--</configuration>-->
-      <!--</plugin>-->
+      <plugin>
+        <groupId>com.github.vbmacher</groupId>
+        <artifactId>cup-maven-plugin</artifactId>
+        <version>11b-20160615</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <className>Parser</className>
+          <symbolsName>sym</symbolsName>
+          <packageName>.</packageName>
+          <cupDefinition>src/main/cup/Parser.cup</cupDefinition>
+          <outputDirectory>src/main/java</outputDirectory>
+          <expectedConflicts>0</expectedConflicts>
+          <progress>true</progress>
+        </configuration>
+      </plugin>
 
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.1</version>
+      </plugin>
+
+      <!-- Deletes generated Lexer.java, Parser.java, sym.java -->
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src/main/java</directory>
+              <includes>
+                <include>Lexer.java</include>
+                <include>Parser.java</include>
+                <include>sym.java</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+        </configuration>
       </plugin>
 
     </plugins>
