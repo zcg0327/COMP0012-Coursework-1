@@ -1,3 +1,5 @@
+package com.jieyouxu;
+
 import java_cup.runtime.*;
 
 %%

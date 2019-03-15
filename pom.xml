@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>top.jieyouxu</groupId>
+  <groupId>com.jieyouxu</groupId>
   <artifactId>COMP0012-Coursework-1</artifactId>
   <version>1.0</version>
 
@@ -86,7 +86,7 @@
         <configuration>
           <className>Parser</className>
           <symbolsName>sym</symbolsName>
-          <packageName>.</packageName>
+          <packageName>com.jieyouxu</packageName>
           <cupDefinition>src/main/cup/Parser.cup</cupDefinition>
           <outputDirectory>src/main/java</outputDirectory>
           <expectedConflicts>0</expectedConflicts>
@@ -106,7 +106,7 @@
         <configuration>
           <filesets>
             <fileset>
-              <directory>src/main/java</directory>
+              <directory>src/main/java/com/jieyouxu</directory>
               <includes>
                 <include>Lexer.java</include>
                 <include>Parser.java</include>
