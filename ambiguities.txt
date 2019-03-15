@@ -1,0 +1,169 @@
+PARAGRAPH:    3
+PROBLEM:      Multiline comments `/# ... #/` was stated to be able to include
+              "any character, including newlines." But to pair comment
+              delimiters, a multiline comment cannot contain the end-of-comment
+              character sequence `/#` within the contents, i.e. `/# #/ #/`.
+SOLUTION:     The specification should specify that multiline comments can
+              include any characters, including newlines, with the exception
+              of the end-of-comment character sequence `#/`. This is required
+              such that comments can be properly discarded.
+
+PARAGRAPH:    6
+PROBLEM:      English language ambiguity: the phrase describing a character to
+              be a "single letter, punctuation symbol, or digit wrapped in ' '"
+              may be mis-interpreted to mean that a character can either be:
+              - a single letter                 <e.g. `a`, `b`>
+              - a punctuation symbol, or        <e.g. `,`, `.`>
+              - a digit wrapped in ' '          <e.g. `'1'`, `'2'`>
+SOLUTION:     The specification should instead explicitly state that a character
+              can be one of the following:
+              - a single character, or
+              - a single punctuation mark, or
+              - a digit
+              Which is wrapped in single quotation marks `''`.
+
+PARAGRAPH:    6
+PROBLEM:      Allowing simply any "punctuation symbol" including the single
+              quotation mark `'` can cause the parser to fail - the single
+              quotation mark is a paired delimiter, meaning that a single quote
+              cannot appear in between the start-of-character single quote and
+              the end-of-character single quote.
+SOLUTION:     As with many programming languages, introduce escape sequences
+              such as those present in Java. For example, `'\''` is a valid
+              single quote character because the backslash escapes the single
+              quote, allowing unambiguous paired delimiter parsing.
+              Additionally, whitespaces such as carriage-return, newline, tab,
+              backspace can be written as `\r`, `\n`, `\t`, `\b` respectively.
+              The backslash itself can be escaped with another backslash, i.e.
+              `'\\'` is the backslash character literal included in single-quote
+              delimiters.
+
+PARAGRAPH:    8
+PROBLEM:      The specification provided examples of integers, rationals and
+              floats as the numeric primitive types. However, no exact syntax of
+              what constitutes a valid integer, rational or float was specified.
+SOLUTION:     Formal specification (in regular expression) for each of the
+              numeric literal type is required such that no ambiguities can
+              arise, especially for floating point numbers and rational
+              numbers.
+              The integer types are specified below via regular expressions:
+              ------------------------------------------------------------------
+              Numeric Type      Regex / Explanation
+              ------------------------------------------------------------------
+              IntegerLiteral          [\\-]?[0-9]+([_]+[0-9]+)*
+              FloatingPointLiteral    [\\-]?[0-9]+([_]+[0-9]+)*
+                                          [\\.][0-9]+([_]+[0-9]+)*
+              RationalLiteral         [\\-]?[0-9]+([_]+[0-9]+)*
+                                          [/][0-9]+([_]+[0-9]+)*
+              ------------------------------------------------------------------
+              Note that underscores are supported for each of the literal, but
+              the underscore can only appear between digits; the numeric literal
+              must not start or end with an underscore.
+              For or the floating point literal, the literal cannot omit digits
+              before or after the decimal point `.`; i.e. `-1.0` cannot be
+              abbreviated as `-1` or `-1.`, and `0.0` cannot be abbreviated as
+              `0`.
+              For the rational literal, the literal cannot omit digits before or
+              after the division symbol `/`.
+
+PARAGRAPH:    9
+PROBLEM:      The specification allows sequence to be declared to contain
+              mixed-typed contents with the declaration `seq<top S>`. However,
+              the specification did not specify whether `top` as a general type
+              could be used elsewhere.
+SOLUTION:     The keyword type `top` should still be reserved, but its usage
+              should only be valid within sequence type declarations, as it
+              would prevent effective type checking elsewhere.
+
+PARAGRAPH:    9
+PROBLEM:      The specification does not specify whether trailing commas in a
+              sequence literal is supported.
+SOLUTION:     By default, trailing commas are supported as with many other
+              programming languages, such as Java or JavaScript. Trailing commas
+              serve as syntax sugar only, and does not otherwise change
+              semantics.
+              e.g.   a : seq<int L> := [1, 2, 3,]
+
+PARAGRAPH:    10
+PROBLEM:      The specification does not specify that for string literals,
+              requirements for escaped characters. This means that between
+              double quotation marks `"..."`, arbitrary characters can exist,
+              including a double quote character.
+SOLUTION:     In order for the lexer to be able to identify such string as a
+              literal, special characters such as double quotation mark must be
+              escaped `\""`, just like for character literals, with the
+              exception of single quotes (since single quotation marks are not
+              used to determine the start and end of a string literal). That is,
+              all escape sequences used in character literals, `\r`, `\n`, `\t`,
+              `\b` should also be escaped in string literals, with the exception
+              of single quotation mark, and with the addition of double
+              quotation marks `\"`.
+
+PARAGRAPH:    11
+PROBLEM:      The specification stated that "a[:2] is [1, 2]" for sequence `a
+              == [1, 2, 3, 4, 5]`. This is not consistent with other slicing
+              behaviours:
+              -   `a[1:3] == [2, 3, 4]`
+              -   `a[2:-1] == a[2:len(a) -1] == [3, 4, 5]`
+              -   `a[3:] == [4, 5]`
+SOLUTION      The specification should instead state `a[:1]` since it is
+              intended as syntax sugar for `a[0:1]`, which is consistent with
+              other slicing behaviours.
+
+PARAGRAPH:    11
+PROBLEM:      The specification does not state whether `a[:]` is valid sequence
+              slicing syntax.
+SOLUTION:     This should be accepted as valid syntax, as suggested on page 1 of
+              the specification, since many other languages which do support
+              slicing allows it.
+
+PARAGRAPH:    13
+PROBLEM:      The specification does not state explicitly whether trailing comma
+              is supported for `declaration_list`.
+SOLUTION:     Trailing comma is accepted, consistent with list literals, as
+              trailing commas do not otherwise change semantics.
+
+PARAGRAPH:    13
+PROBLEM:      The specification does not state explicitly whether
+              `declaration_list` can be empty.
+SOLUTION:     `declaration_list` should be non-empty, as it does not make sense
+              for a data type of have zero members.
+
+PARAGRAPH:    14
+PROBLEM:      The specification states that the type-aliasing directive can
+              appear within a `declaration_list`. This means that type
+              definitions such as `tdef person { a : int L, b : alias int H
+              high ; };` would be accepted as valid syntax.
+SOLUTION:     This does not seem to be the intended behaviour. Instead, the
+              specification should state that previously-aliased type names can
+              be used in a `declaration_list`.
+
+PARAGRAPH:    15
+PROBLEM:      The specification does not explicitly state whether a function's
+              parameter list can be empty.
+SOLUTION:     A function taking zero parameters should be valid, and so an empty
+              parameter list should be accepted.
+
+PARAGRAPH:    15
+PROBLEM:      The specification does not state explicitly whether a function's
+              parameter list can have trailing commas.
+SOLUTION:     Trailing commas in function parameter list is not allowed, as
+              consistent with many programming languages such as Java.
+
+PARAGRAPH:    15
+PROBLEM:      The specification does not explicitly state that the `main`
+              function is required to omit the `fdef` declaration.
+SOLUTION:     The specification should explicitly that all functions, apart from
+              `main`, is required to be declared and defined with the `fdef`
+              keyword. The `main` function then has the syntax of:
+              `main { body };`. This is consistent with Listing 5.
+
+PARAGRAPH:    16
+PROBLEM:      The specification states that function calls can be either a
+              statement or an expression.
+SOLUTION:     The specification should instead state that function calls are
+              expressions only (e.g. `fn()` would be a function call expression)
+              , but can become statements if they are terminated with a
+              semi-colon (e.g. `fn();`). This is consistent with languages like
+              Java and C. This ensures that function calls can be part of
+              composite expressions such as `min(1, 2) + 2`.
