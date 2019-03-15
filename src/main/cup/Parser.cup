@@ -1,0 +1,25 @@
+import java_cup.runtime.*;
+
+scan with {: return lexer.next_token(); :};
+
+parser code {:
+
+  private boolean debug = false;
+  public boolean  debug()         {return debug;}
+  public void     debug(boolean b){debug = b;}
+
+  private Lexer lexer;
+
+  public Parser(Lexer lexer) {
+    super(lexer);
+    this.lexer = lexer;
+  }
+
+:};
+
+terminal INTEGER;
+terminal BADCHAR;
+
+nonterminal zsec_program;
+
+zsec_program ::= INTEGER {: System.out.println("TEST"); :};
