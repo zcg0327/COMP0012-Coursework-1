@@ -13,7 +13,7 @@ import java_cup.runtime.*;
 %column
 
 %{
-    private StringBuffer string = new StringBuffer();
+    private StringBuffer stringLiteral = new StringBuffer();
 
     private Symbol symbol(int type) {
         return new Symbol(type, yyline, yycolumn);
@@ -34,7 +34,7 @@ Comment = {SingleLineComment} | {MultiLineComment}
 MultiLineComment = "/#" {MultiLineCommentContent}* [#]+ "/"
 MultiLineCommentContent = ( [^#] | ( [#]+ [^\/]* ) )*
 
-SingleLineComment = "#" {InputCharacter}* {LineTerminator}
+SingleLineComment = "#" {InputCharacter}* {LineTerminator}?
 
 
 Identifier = {Letter} {LetterDigitUnderscore}*
@@ -43,8 +43,8 @@ Digit = [0-9]
 LetterDigit = {Letter} | {Digit}
 LetterDigitUnderscore = {LetterDigit} | "_"
 
-%state IDENTIFIER
-%state STRING
+%state CHARACTER_LITERAL
+%state STRING_LITERAL
 
 %%
 
@@ -77,17 +77,42 @@ LetterDigitUnderscore = {LetterDigit} | "_"
 <YYINITIAL> "T"                     { return symbol(sym.TRUE); }
 <YYINITIAL> "F"                     { return symbol(sym.FALSE); }
 
+
 <YYINITIAL> {
-    // Comments
+
+    /* Literals */
+    // Character Literal
+    \'                              { yybegin(CHARACTER_LITERAL); }
+
+    /* Comments */
     {Comment}                       { /* ignore */ }
 
-    // Whitespace
+    /* Whitespace */
     {Whitespace}                    { /* ignore */ }
 
-    // Identifier
+    /* Identifier */
     {Identifier}                    { return symbol(sym.IDENTIFIER, yytext()); }
 }
 
 
-// Error fallback
+<CHARACTER_LITERAL> {
+    // Single ASCII character which do not need escape
+    [^\r\n\\\']\'                   { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, yycharat(0)); }
+
+    // Escape characters begin with \
+    "\\0"\'                         { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, '\0'); }
+    "\\\\"\'                        { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, '\\'); }
+    "\\t"\'                         { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, '\t'); }
+    "\\n"\'                         { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, '\n'); }
+    "\\r"\'                         { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, '\r'); }
+    "\\'"\'                         { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, '\''); }
+    "\\b"\'                         { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, '\b'); }
+    "\\f"\'                         { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, '\f'); }
+
+    \\.                             {  return symbol(sym.BADCHAR, yycharat(0)); }
+    {LineTerminator}                {  return symbol(sym.BADCHAR, yycharat(0)); }
+}
+
+
+// Error
 [^]                                 { return symbol(sym.BADCHAR, yytext()); }

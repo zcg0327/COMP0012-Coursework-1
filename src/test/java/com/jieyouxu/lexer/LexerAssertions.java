@@ -93,7 +93,8 @@ public class LexerAssertions {
         setupLexer(input);
 
         try {
-            assertEquals(sym.BADCHAR, lexer.next_token().sym);
+            int nextActualToken = lexer.next_token().sym;
+            assertTrue(nextActualToken == sym.BADCHAR || nextActualToken == sym.EOF);
         } catch (IOException e) {
             fail(e.toString());
         }
