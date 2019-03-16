@@ -50,12 +50,13 @@ terminal    IDENTIFIER,         // id
             LOOP,               // Loop-begin
             POOL,               // Loop-end
             BREAK,
-            RETURN
+            RETURN,
+            TRUE,               // T
+            FALSE               // F
             ;
 
 // Literals
 terminal    CHAR_LITERAL,       // 'x'
-            BOOL_LITERAL,       // T, F
             INT_LITERAL,        // 123
             RAT_LITERAL,        // 1/2
             FLOAT_LITERAL,      // 1.234

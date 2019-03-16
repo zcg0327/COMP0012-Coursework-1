@@ -49,9 +49,33 @@ LetterDigitUnderscore = {LetterDigit} | "_"
 %%
 
 // Keywords
+<YYINITIAL> "main"                  { return symbol(sym.MAIN); }
 <YYINITIAL> "L"                     { return symbol(sym.SECURITY_LOW); }
 <YYINITIAL> "H"                     { return symbol(sym.SECURITY_HIGH); }
-<YYINITIAL> "main"                  { return symbol(sym.MAIN); }
+<YYINITIAL> "char"                  { return symbol(sym.CHAR); }
+<YYINITIAL> "bool"                  { return symbol(sym.BOOL); }
+<YYINITIAL> "int"                   { return symbol(sym.INT); }
+<YYINITIAL> "rat"                   { return symbol(sym.RAT); }
+<YYINITIAL> "float"                 { return symbol(sym.FLOAT); }
+<YYINITIAL> "seq"                   { return symbol(sym.SEQ); }
+<YYINITIAL> "top"                   { return symbol(sym.TOP); }
+<YYINITIAL> "len"                   { return symbol(sym.LEN); }
+<YYINITIAL> "in"                    { return symbol(sym.IN); }
+<YYINITIAL> "tdef"                  { return symbol(sym.TDEF); }
+<YYINITIAL> "alias"                 { return symbol(sym.ALIAS); }
+<YYINITIAL> "fdef"                  { return symbol(sym.FDEF); }
+<YYINITIAL> "read"                  { return symbol(sym.READ); }
+<YYINITIAL> "print"                 { return symbol(sym.PRINT); }
+<YYINITIAL> "if"                    { return symbol(sym.IF); }
+<YYINITIAL> "then"                  { return symbol(sym.THEN); }
+<YYINITIAL> "else"                  { return symbol(sym.ELSE); }
+<YYINITIAL> "fi"                    { return symbol(sym.FI); }
+<YYINITIAL> "loop"                  { return symbol(sym.LOOP); }
+<YYINITIAL> "pool"                  { return symbol(sym.POOL); }
+<YYINITIAL> "break"                 { return symbol(sym.BREAK); }
+<YYINITIAL> "return"                { return symbol(sym.RETURN); }
+<YYINITIAL> "T"                     { return symbol(sym.TRUE); }
+<YYINITIAL> "F"                     { return symbol(sym.FALSE); }
 
 <YYINITIAL> {
     // Comments

@@ -9,18 +9,20 @@ import java.util.List;
 public class IdentifierTest {
     @Test
     public void testLegalIdentifiers() {
-        LexerAssertions.assertSymbolsMatch("a", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch(" b", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch(" c ", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch("abcdef", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch("A", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch("AbCdEf", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch("a_1", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch("a_1b", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch("a_a1", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch("a1", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch("a123", List.of(sym.IDENTIFIER));
-        LexerAssertions.assertSymbolsMatch("a1c3", List.of(sym.IDENTIFIER));
+        LexerAssertions.assertSymbolMatches("a", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches(" b", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches(" c ", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("abcdef", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("A", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("AbCdEf", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("a_1", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("a_1b", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("a_a1", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("a1", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("a123", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("a1c3", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("l", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolMatches("h", sym.IDENTIFIER);
     }
 
     @Test
@@ -36,5 +38,7 @@ public class IdentifierTest {
                                            List.of(sym.IDENTIFIER, sym.BADCHAR, sym.IDENTIFIER));
         LexerAssertions.assertSymbolDoNotMatch("1", sym.IDENTIFIER);
         LexerAssertions.assertSymbolDoNotMatch("1_", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolDoNotMatch("L", sym.IDENTIFIER);
+        LexerAssertions.assertSymbolDoNotMatch("H", sym.IDENTIFIER);
     }
 }

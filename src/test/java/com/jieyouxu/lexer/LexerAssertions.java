@@ -15,6 +15,16 @@ public class LexerAssertions {
     private static Lexer lexer;
     private static Iterator<Integer> symbolIterator;
 
+    public static void assertSymbolMatches(String input, int expectedSymbol) {
+        setupLexer(input);
+
+        try {
+            assertEquals(expectedSymbol, lexer.next_token().sym);
+        } catch (IOException e) {
+            fail(e.toString());
+        }
+    }
+
     public static void assertSymbolsMatch(String input, List<Integer> expectedSymbols) {
         setupLexer(input);
         setupIterator(expectedSymbols);

@@ -4,18 +4,16 @@ import com.jieyouxu.lexer.LexerAssertions;
 import com.jieyouxu.sym;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 public class SecurityLabelTest {
     @Test
     public void testLowLabel() {
-        LexerAssertions.assertSymbolsMatch("L", List.of(sym.SECURITY_LOW));
+        LexerAssertions.assertSymbolMatches("L", sym.SECURITY_LOW);
         LexerAssertions.assertSymbolDoNotMatch("l", sym.SECURITY_LOW);
     }
 
     @Test
     public void testHighLabel() {
-        LexerAssertions.assertSymbolsMatch("H", List.of(sym.SECURITY_HIGH));
+        LexerAssertions.assertSymbolMatches("H", sym.SECURITY_HIGH);
         LexerAssertions.assertSymbolDoNotMatch("h", sym.SECURITY_HIGH);
     }
 }
