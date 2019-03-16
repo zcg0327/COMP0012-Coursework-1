@@ -26,7 +26,8 @@ parser code {:
 
 // Keywords, Identifiers
 terminal    IDENTIFIER,         // id
-            SECURITY_LABEL,     // S = {L, H}
+            SECURITY_LOW,       // Low security
+            SECURITY_HIGH,      // High security
             CHAR,               // char
             BOOL,               // bool
             INT,                // int

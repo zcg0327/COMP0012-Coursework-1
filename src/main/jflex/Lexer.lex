@@ -13,6 +13,8 @@ import java_cup.runtime.*;
 %column
 
 %{
+    private StringBuffer string = new StringBuffer();
+
     private Symbol symbol(int type) {
         return new Symbol(type, yyline, yycolumn);
     }
@@ -23,10 +25,10 @@ import java_cup.runtime.*;
 %}
 
 LineTerminator = \r | \n | \r\n
-InputCharacter = [^\r\n]
 Whitespace = {LineTerminator} | " " | \t | \f
+InputCharacter = [^\r\n]
 
-// Comments
+
 Comment = {SingleLineComment} | {MultiLineComment}
 
 SingleLineComment = "#" {InputCharacter}* {LineTerminator}
@@ -34,23 +36,21 @@ SingleLineComment = "#" {InputCharacter}* {LineTerminator}
 MultiLineComment = "/#" {MultiLineCommentContent}* [#]+ "/"
 MultiLineCommentContent = ( [^#] | ( [#]+ [^\/]* ) )*
 
-// Identifier
+
 Identifier = {Letter} {LetterDigitUnderscore}*
 Letter = [a-zA-Z]
 Digit = [0-9]
 LetterDigit = {Letter} | {Digit}
 LetterDigitUnderscore = {LetterDigit} | "_"
 
-// Security label
-SecurityLabel = {Low} | {High}
-Low = "L"
-High = "H"
-
-// TODO
+%state IDENTIFIER
+%state STRING
 
 %%
 
-// TODO
+// Keywords
+<YYINITIAL> "L"                     { return symbol(sym.SECURITY_LOW); }
+<YYINITIAL> "H"                     { return symbol(sym.SECURITY_HIGH); }
 
 <YYINITIAL> {
     // Comments
@@ -58,7 +58,11 @@ High = "H"
 
     // Whitespace
     {Whitespace}                    { /* ignore */ }
+
+    // Identifier
+    {Identifier}                    { return symbol(sym.IDENTIFIER, yytext()); }
 }
+
 
 // Error fallback
 [^]                                 { throw new IllegalArgumentException(
