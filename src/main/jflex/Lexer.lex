@@ -31,10 +31,10 @@ InputCharacter = [^\r\n]
 
 Comment = {SingleLineComment} | {MultiLineComment}
 
-SingleLineComment = "#" {InputCharacter}* {LineTerminator}
-
 MultiLineComment = "/#" {MultiLineCommentContent}* [#]+ "/"
 MultiLineCommentContent = ( [^#] | ( [#]+ [^\/]* ) )*
+
+SingleLineComment = "#" {InputCharacter}* {LineTerminator}
 
 
 Identifier = {Letter} {LetterDigitUnderscore}*
@@ -51,6 +51,7 @@ LetterDigitUnderscore = {LetterDigit} | "_"
 // Keywords
 <YYINITIAL> "L"                     { return symbol(sym.SECURITY_LOW); }
 <YYINITIAL> "H"                     { return symbol(sym.SECURITY_HIGH); }
+<YYINITIAL> "main"                  { return symbol(sym.MAIN); }
 
 <YYINITIAL> {
     // Comments
@@ -65,7 +66,4 @@ LetterDigitUnderscore = {LetterDigit} | "_"
 
 
 // Error fallback
-[^]                                 { throw new IllegalArgumentException(
-                                        "Illegal character < "
-                                        + yytext()
-                                        + " >"); }
+[^]                                 { return symbol(sym.BADCHAR, yytext()); }

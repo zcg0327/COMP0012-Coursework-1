@@ -21,4 +21,11 @@ public class MultiLineCommentTest {
         LexerAssertions.assertNonEmptyLex("l/#\n\n #/");
         LexerAssertions.assertNonEmptyLex("/#\r\n##/l");
     }
+
+    @Test
+    public void assertMultiLineCommentFailsIfUnmatched() {
+        LexerAssertions.assertParsingFails("/#");
+        LexerAssertions.assertParsingFails("#/");
+        LexerAssertions.assertParsingFails("/##//");
+    }
 }

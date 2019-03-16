@@ -78,4 +78,14 @@ public class LexerAssertions {
             fail(e.toString());
         }
     }
+
+    public static void assertParsingFails(String input) {
+        setupLexer(input);
+
+        try {
+            assertEquals(sym.BADCHAR, lexer.next_token().sym);
+        } catch (IOException e) {
+            fail(e.toString());
+        }
+    }
 }
