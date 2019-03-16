@@ -1,3 +1,4 @@
+// FIXME reminder to remove package statement when done
 package com.jieyouxu;
 
 import java_cup.runtime.*;
@@ -51,6 +52,16 @@ High = "H"
 
 // TODO
 
+<YYINITIAL> {
+    // Comments
+    {Comment}                       { /* ignore */ }
+
+    // Whitespace
+    {Whitespace}                    { /* ignore */ }
+}
+
 // Error fallback
-[^]                                   { throw new Error("Illegal character" +
-                                        "< " + yytext() + " >"); }
+[^]                                 { throw new IllegalArgumentException(
+                                        "Illegal character < "
+                                        + yytext()
+                                        + " >"); }
