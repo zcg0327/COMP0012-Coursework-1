@@ -15,11 +15,85 @@ parser code {:
     this.lexer = lexer;
   }
 
+  public void syntax_error(Symbol current_token) {
+    report_error(
+        "Syntax error at line " + (current_token.left+1) + ", column "
+        + current_token.right + ". ", null
+    );
+  }
+
 :};
 
-terminal INTEGER;
-terminal BADCHAR;
+// Keywords, Identifiers
+terminal    IDENTIFIER,         // id
+            SECURITY_LABEL,     // S = {L, H}
+            CHAR,               // char
+            BOOL,               // bool
+            INT,                // int
+            RAT,                // rat
+            FLOAT,              // float
+            SEQ,                // seq
+            TOP,                // top
+            LEN,                // len
+            IN,                 // in
+            TDEF,               // Type definition
+            ALIAS,              // Type alias
+            FDEF,               // Function definition
+            MAIN,               // Special main method
+            READ,               // Input
+            PRINT,              // Output
+            IF,                 // If-begin
+            FI,                 // If-end
+            THEN,
+            ELSE,
+            LOOP,               // Loop-begin
+            POOL,               // Loop-end
+            BREAK,
+            RETURN
+            ;
+
+// Literals
+terminal    CHAR_LITERAL,       // 'x'
+            BOOL_LITERAL,       // T, F
+            INT_LITERAL,        // 123
+            RAT_LITERAL,        // 1/2
+            FLOAT_LITERAL,      // 1.234
+            STRING_LITERAL      // "hello, world"
+            ;
+
+// Separators, Grouping Operators, Terminators
+terminal    LPAREN,             // (
+            RPAREN,             // )
+            LANGLE,             // <
+            RANGLE,             // >
+            LBRACE,             // {
+            RBRACE,             // }
+            LBRACKET,           // [
+            RBRACKET,           // ]
+            SEMICOLON,          // ;
+            COMMA               // ,
+            ;
+
+// Operators
+terminal    ASSIGN,             // :=
+            COLON,              // :
+            PLUS,               // +
+            MINUS,              // -
+            DIV,                // /
+            MULT,               // *
+            NOT,                // !
+            AND,                // &&
+            OR,                 // ||
+            CONCAT,             // ::
+            LESS,               // <
+            LESS_EQ,            // <=
+            EQ,                 // =
+            NEQ,                // !=
+            DOT                 // .
+            ;
+
+terminal    BADCHAR;
 
 nonterminal zsec_program;
 
-zsec_program ::= INTEGER {: System.out.println("TEST"); :};
+zsec_program ::= IDENTIFIER {: System.out.println("TEST"); :};
