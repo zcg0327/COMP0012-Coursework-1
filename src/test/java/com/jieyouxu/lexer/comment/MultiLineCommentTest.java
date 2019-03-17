@@ -24,7 +24,7 @@ public class MultiLineCommentTest {
 
     @Test
     public void assertMultiLineCommentFailsIfUnmatched() {
-        LexerAssertions.assertParsingFails("/#");
-        LexerAssertions.assertParsingFails("/##//");
+        LexerAssertions.assertLexingFails("/#");
+        LexerAssertions.assertLexingFails("/##//");
     }
 }

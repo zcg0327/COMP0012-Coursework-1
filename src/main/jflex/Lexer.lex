@@ -28,7 +28,6 @@ LineTerminator = \r | \n | \r\n
 Whitespace = {LineTerminator} | " " | \t | \f
 InputCharacter = [^\r\n]
 
-
 Comment = {SingleLineComment} | {MultiLineComment}
 
 MultiLineComment = "/#" {MultiLineCommentContent}* [#]+ "/"
@@ -36,52 +35,62 @@ MultiLineCommentContent = ( [^#] | ( [#]+ [^\/]* ) )*
 
 SingleLineComment = "#" {InputCharacter}* {LineTerminator}?
 
-
 Identifier = {Letter} {LetterDigitUnderscore}*
 Letter = [a-zA-Z]
 Digit = [0-9]
 LetterDigit = {Letter} | {Digit}
-LetterDigitUnderscore = {LetterDigit} | "_"
+Underscore = "_"
+LetterDigitUnderscore = {LetterDigit} | {Underscore}
+
+IntegerLiteral = {Digit}+({Underscore}*{Digit}+)*
+IllegalIntegerLiteral = {Underscore}*{IntegerLiteral}{Underscore}+
+
 
 %state CHARACTER_LITERAL
 %state STRING_LITERAL
 
 %%
 
-// Keywords
-<YYINITIAL> "main"                  { return symbol(sym.MAIN); }
-<YYINITIAL> "L"                     { return symbol(sym.SECURITY_LOW); }
-<YYINITIAL> "H"                     { return symbol(sym.SECURITY_HIGH); }
-<YYINITIAL> "char"                  { return symbol(sym.CHAR); }
-<YYINITIAL> "bool"                  { return symbol(sym.BOOL); }
-<YYINITIAL> "int"                   { return symbol(sym.INT); }
-<YYINITIAL> "rat"                   { return symbol(sym.RAT); }
-<YYINITIAL> "float"                 { return symbol(sym.FLOAT); }
-<YYINITIAL> "seq"                   { return symbol(sym.SEQ); }
-<YYINITIAL> "top"                   { return symbol(sym.TOP); }
-<YYINITIAL> "len"                   { return symbol(sym.LEN); }
-<YYINITIAL> "in"                    { return symbol(sym.IN); }
-<YYINITIAL> "tdef"                  { return symbol(sym.TDEF); }
-<YYINITIAL> "alias"                 { return symbol(sym.ALIAS); }
-<YYINITIAL> "fdef"                  { return symbol(sym.FDEF); }
-<YYINITIAL> "read"                  { return symbol(sym.READ); }
-<YYINITIAL> "print"                 { return symbol(sym.PRINT); }
-<YYINITIAL> "if"                    { return symbol(sym.IF); }
-<YYINITIAL> "then"                  { return symbol(sym.THEN); }
-<YYINITIAL> "else"                  { return symbol(sym.ELSE); }
-<YYINITIAL> "fi"                    { return symbol(sym.FI); }
-<YYINITIAL> "loop"                  { return symbol(sym.LOOP); }
-<YYINITIAL> "pool"                  { return symbol(sym.POOL); }
-<YYINITIAL> "break"                 { return symbol(sym.BREAK); }
-<YYINITIAL> "return"                { return symbol(sym.RETURN); }
-<YYINITIAL> "T"                     { return symbol(sym.TRUE); }
-<YYINITIAL> "F"                     { return symbol(sym.FALSE); }
-
 
 <YYINITIAL> {
+    /* Keywords */
+    "main"                          { return symbol(sym.MAIN); }
+    "char"                          { return symbol(sym.CHAR); }
+    "bool"                          { return symbol(sym.BOOL); }
+    "int"                           { return symbol(sym.INT); }
+    "rat"                           { return symbol(sym.RAT); }
+    "float"                         { return symbol(sym.FLOAT); }
+    "seq"                           { return symbol(sym.SEQ); }
+    "top"                           { return symbol(sym.TOP); }
+    "len"                           { return symbol(sym.LEN); }
+    "in"                            { return symbol(sym.IN); }
+    "tdef"                          { return symbol(sym.TDEF); }
+    "alias"                         { return symbol(sym.ALIAS); }
+    "fdef"                          { return symbol(sym.FDEF); }
+    "read"                          { return symbol(sym.READ); }
+    "print"                         { return symbol(sym.PRINT); }
+    "if"                            { return symbol(sym.IF); }
+    "then"                          { return symbol(sym.THEN); }
+    "else"                          { return symbol(sym.ELSE); }
+    "fi"                            { return symbol(sym.FI); }
+    "loop"                          { return symbol(sym.LOOP); }
+    "pool"                          { return symbol(sym.POOL); }
+    "break"                         { return symbol(sym.BREAK); }
+    "return"                        { return symbol(sym.RETURN); }
 
-    /* Literals */
-    // Character Literal
+    // Security Label
+    "L"                             { return symbol(sym.SECURITY_LOW); }
+    "H"                             { return symbol(sym.SECURITY_HIGH); }
+
+    // Boolean Literals
+    "T"                             { return symbol(sym.TRUE); }
+    "F"                             { return symbol(sym.FALSE); }
+
+    /* Numeric Literals */
+    {IntegerLiteral}                { return symbol(sym.INT_LITERAL, yytext()); }
+    {IllegalIntegerLiteral}         { return symbol(sym.BADCHAR, yytext()); }
+
+    /* Character Literal */
     \'                              { yybegin(CHARACTER_LITERAL); }
 
     /* Comments */

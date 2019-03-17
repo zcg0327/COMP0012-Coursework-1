@@ -39,12 +39,12 @@ public class CharacterLiteralTest {
 
     @Test
     public void testIllegalCharacterLiterals() {
-        LexerAssertions.assertParsingFails("''");
-        LexerAssertions.assertParsingFails("'id");
-        LexerAssertions.assertParsingFails("' ");
-        LexerAssertions.assertParsingFails(" '");
-        LexerAssertions.assertParsingFails("'ab'");
-        LexerAssertions.assertParsingFails("'\n'");
-        LexerAssertions.assertParsingFails("'\\'");
+        LexerAssertions.assertLexingFails("''");
+        LexerAssertions.assertLexingFails("'id");
+        LexerAssertions.assertLexingFails("' ");
+        LexerAssertions.assertLexingFails(" '");
+        LexerAssertions.assertLexingFails("'ab'");
+        LexerAssertions.assertLexingFails("'\n'");
+        LexerAssertions.assertLexingFails("'\\'");
     }
 }

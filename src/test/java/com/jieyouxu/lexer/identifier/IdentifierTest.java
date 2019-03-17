@@ -27,11 +27,11 @@ public class IdentifierTest {
 
     @Test
     public void testIllegalIdentifiers() {
-        LexerAssertions.assertParsingFails("_abc");
-        LexerAssertions.assertParsingFails("_1");
-        LexerAssertions.assertParsingFails("$");
-        LexerAssertions.assertParsingFails("@");
-        LexerAssertions.assertParsingFails("`");
+        LexerAssertions.assertLexingFails("_abc");
+        LexerAssertions.assertLexingFails("_1");
+        LexerAssertions.assertLexingFails("$");
+        LexerAssertions.assertLexingFails("@");
+        LexerAssertions.assertLexingFails("`");
         LexerAssertions.assertSymbolsMatch("a$b",
                                            List.of(sym.IDENTIFIER, sym.BADCHAR, sym.IDENTIFIER));
         LexerAssertions.assertSymbolsMatch("a&b",

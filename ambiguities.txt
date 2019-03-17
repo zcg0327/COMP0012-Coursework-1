@@ -42,26 +42,12 @@ PARAGRAPH:    8
 PROBLEM:      The specification provided examples of integers, rationals and
               floats as the numeric primitive types. However, no exact syntax of
               what constitutes a valid integer, rational or float was specified.
-SOLUTION:     Formal specification (in regular expression) for each of the
-              numeric literal type is required such that no ambiguities can
-              arise, especially for floating point numbers and rational
-              numbers.
-              The integer types are specified below via regular expressions:
-              ------------------------------------------------------------------
-              Numeric Type      Regex / Explanation
-              ------------------------------------------------------------------
-              IntegerLiteral          [\\-]?[0-9]+([_]+[0-9]+)*
-              FloatingPointLiteral    [\\-]?[0-9]+([_]+[0-9]+)*
-                                          [\\.][0-9]+([_]+[0-9]+)*
-              RationalLiteral         [\\-]?[0-9]+([_]+[0-9]+)*
-                                          [/][0-9]+([_]+[0-9]+)*
-              ------------------------------------------------------------------
-              Note that underscores are supported for each of the literal, but
-              the underscore can only appear between digits; the numeric literal
+SOLUTION:     Underscores are supported for each of the literal, but the
+              underscore can only appear between digits; the numeric literal
               must not start or end with an underscore.
               For or the floating point literal, the literal cannot omit digits
-              before or after the decimal point `.`; i.e. `-1.0` cannot be
-              abbreviated as `-1` or `-1.`, and `0.0` cannot be abbreviated as
+              before or after the decimal point `.`; i.e. `1.0` cannot be
+              abbreviated as `1` or `1.`, and `0.0` cannot be abbreviated as
               `0`.
               For the rational literal, the literal cannot omit digits before or
               after the division symbol `/`.

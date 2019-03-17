@@ -89,12 +89,14 @@ public class LexerAssertions {
         }
     }
 
-    public static void assertParsingFails(String input) {
+    public static void assertLexingFails(String input) {
         setupLexer(input);
 
         try {
             int nextActualToken = lexer.next_token().sym;
-            assertTrue(nextActualToken == sym.BADCHAR || nextActualToken == sym.EOF);
+            if (nextActualToken != sym.BADCHAR && nextActualToken != sym.EOF) {
+                fail("Actual symbol: " + nextActualToken);
+            }
         } catch (IOException e) {
             fail(e.toString());
         }
