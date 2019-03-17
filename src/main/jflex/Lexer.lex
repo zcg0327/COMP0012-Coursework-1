@@ -13,7 +13,7 @@ import java_cup.runtime.*;
 %column
 
 %{
-    private StringBuffer stringLiteral = new StringBuffer();
+    private StringBuffer characters = new StringBuffer();
 
     private Symbol symbol(int type) {
         return new Symbol(type, yyline, yycolumn);
@@ -144,6 +144,10 @@ IllegalFloatLiteral = {IllegalIntegerLiteral} "." {IllegalIntegerLiteral}
     /* Character Literal */
     \'                              { yybegin(CHARACTER_LITERAL); }
 
+    /* String Literal */
+    \"                              { yybegin(STRING_LITERAL); }
+    \"                              { return symbol(sym.BADCHAR, yytext()); }
+
     /* Comments */
     {Comment}                       { /* ignore */ }
 
@@ -174,5 +178,31 @@ IllegalFloatLiteral = {IllegalIntegerLiteral} "." {IllegalIntegerLiteral}
 }
 
 
+<STRING_LITERAL> {
+    // End-of-string
+    \"                              { yybegin(YYINITIAL); return symbol(
+                                        sym.STRING_LITERAL, characters.toString()); }
+
+    // Non-escape characters (1 or more)
+    [^\r\n\t\b\f\0\\\"]+            { characters.append(yytext()); }
+
+    // Escape characters begin with \
+    "\\0"                           { characters.append('\0'); }
+    "\\\\"                          { characters.append('\\'); }
+    "\\t"                           { characters.append('\t'); }
+    "\\n"                           { characters.append('\n'); }
+    "\\r"                           { characters.append('\r'); }
+    "\\\""                          { characters.append('\"'); }
+    "\\b"                           { characters.append('\b'); }
+    "\\f"                           { characters.append('\f'); }
+
+    \\.                             {  return symbol(sym.BADCHAR, yytext()); }
+    {LineTerminator}                {  return symbol(sym.BADCHAR, yytext()); }
+}
+
+
 // Error
 [^]                                 { return symbol(sym.BADCHAR, yytext()); }
+
+
+<<EOF>>                             { return symbol(sym.EOF); }

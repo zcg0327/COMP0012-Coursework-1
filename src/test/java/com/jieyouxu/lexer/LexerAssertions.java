@@ -95,7 +95,7 @@ public class LexerAssertions {
         try {
             int nextActualToken = lexer.next_token().sym;
             if (nextActualToken != sym.BADCHAR && nextActualToken != sym.EOF) {
-                fail("Actual symbol: " + nextActualToken);
+                fail("Actual Symbol: " + sym.terminalNames[nextActualToken]);
             }
         } catch (IOException e) {
             fail(e.toString());

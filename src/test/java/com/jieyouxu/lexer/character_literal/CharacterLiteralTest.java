@@ -42,7 +42,7 @@ public class CharacterLiteralTest {
         LexerAssertions.assertLexingFails("''");
         LexerAssertions.assertLexingFails("'id");
         LexerAssertions.assertLexingFails("' ");
-        LexerAssertions.assertLexingFails(" '");
+        LexerAssertions.assertLexingFails("'");
         LexerAssertions.assertLexingFails("'ab'");
         LexerAssertions.assertLexingFails("'\n'");
         LexerAssertions.assertLexingFails("'\\'");
