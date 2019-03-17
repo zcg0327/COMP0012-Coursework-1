@@ -66,7 +66,7 @@ terminal    CHAR_LITERAL,       // 'x'
 // Separators, Grouping Operators, Terminators
 terminal    LPAREN,             // (
             RPAREN,             // )
-            LANGLE,             // <
+            LANGLE,             // <        // N.B. also the less than operator
             RANGLE,             // >
             LBRACE,             // {
             RBRACE,             // }
@@ -87,7 +87,6 @@ terminal    ASSIGN,             // :=
             AND,                // &&
             OR,                 // ||
             CONCAT,             // ::
-            LESS,               // <
             LESS_EQ,            // <=
             EQ,                 // =
             NEQ,                // !=

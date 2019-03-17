@@ -45,7 +45,6 @@ LetterDigitUnderscore = {LetterDigit} | {Underscore}
 IntegerLiteral = {Digit}+({Underscore}*{Digit}+)*
 IllegalIntegerLiteral = {Underscore}*{IntegerLiteral}{Underscore}+
 
-
 %state CHARACTER_LITERAL
 %state STRING_LITERAL
 
@@ -78,17 +77,63 @@ IllegalIntegerLiteral = {Underscore}*{IntegerLiteral}{Underscore}+
     "break"                         { return symbol(sym.BREAK); }
     "return"                        { return symbol(sym.RETURN); }
 
-    // Security Label
+    /* Security Label */
     "L"                             { return symbol(sym.SECURITY_LOW); }
     "H"                             { return symbol(sym.SECURITY_HIGH); }
 
-    // Boolean Literals
+    /* Boolean Literals */
     "T"                             { return symbol(sym.TRUE); }
     "F"                             { return symbol(sym.FALSE); }
 
     /* Numeric Literals */
     {IntegerLiteral}                { return symbol(sym.INT_LITERAL, yytext()); }
     {IllegalIntegerLiteral}         { return symbol(sym.BADCHAR, yytext()); }
+
+    // NB: Negative integers handled via unary minus
+    // NB: Rationals handled via division
+
+    /* Operators */
+
+    // Grouping
+    "("                             { return symbol(sym.LPAREN); }
+    ")"                             { return symbol(sym.RPAREN); }
+    "["                             { return symbol(sym.LBRACKET); }
+    "]"                             { return symbol(sym.RBRACKET); }
+    "{"                             { return symbol(sym.LBRACE); }
+    "}"                             { return symbol(sym.RBRACE); }
+    "<"                             { return symbol(sym.LANGLE); }
+    ">"                             { return symbol(sym.RANGLE); }
+
+    // Separators
+    ";"                             { return symbol(sym.SEMICOLON); }
+    ","                             { return symbol(sym.COMMA); }
+
+    // Assignment
+    ":="                            { return symbol(sym.ASSIGN); }
+
+    // Type Annotation
+    ":"                             { return symbol(sym.COLON); }
+
+    // Arithmetic
+    "+"                             { return symbol(sym.PLUS); }
+    "-"                             { return symbol(sym.MINUS); }
+    "*"                             { return symbol(sym.MULT); }
+    "/"                             { return symbol(sym.DIV); }
+
+    // Logic
+    "!"                             { return symbol(sym.NOT); }
+    "="                             { return symbol(sym.EQ); }
+    "!="                            { return symbol(sym.NEQ); }
+    "||"                            { return symbol(sym.OR); }
+    "&&"                            { return symbol(sym.AND); }
+    // NB: Less than sign '<' matched by LANGLE
+    "<="                            { return symbol(sym.LESS_EQ); }
+
+    // Concatenation
+    "::"                            { return symbol(sym.CONCAT); }
+
+    // Field access
+    "."                             { return symbol(sym.DOT); }
 
     /* Character Literal */
     \'                              { yybegin(CHARACTER_LITERAL); }
