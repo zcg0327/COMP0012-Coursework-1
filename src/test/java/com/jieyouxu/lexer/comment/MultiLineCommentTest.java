@@ -1,7 +1,10 @@
 package com.jieyouxu.lexer.comment;
 
 import com.jieyouxu.lexer.LexerAssertions;
+import com.jieyouxu.sym;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 public class MultiLineCommentTest {
     @Test
@@ -24,7 +27,7 @@ public class MultiLineCommentTest {
 
     @Test
     public void assertMultiLineCommentFailsIfUnmatched() {
-        LexerAssertions.assertLexingFails("/#");
-        LexerAssertions.assertLexingFails("/##//");
+        LexerAssertions.assertSymbolsMatch("/#", List.of(sym.DIV));
+        LexerAssertions.assertSymbolsMatch("/##//", List.of(sym.DIV));
     }
 }

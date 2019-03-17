@@ -45,6 +45,9 @@ LetterDigitUnderscore = {LetterDigit} | {Underscore}
 IntegerLiteral = {Digit}+({Underscore}*{Digit}+)*
 IllegalIntegerLiteral = {Underscore}*{IntegerLiteral}{Underscore}+
 
+FloatLiteral = {IntegerLiteral} "." {IntegerLiteral}
+IllegalFloatLiteral = {IllegalIntegerLiteral} "." {IllegalIntegerLiteral}
+
 %state CHARACTER_LITERAL
 %state STRING_LITERAL
 
@@ -88,6 +91,9 @@ IllegalIntegerLiteral = {Underscore}*{IntegerLiteral}{Underscore}+
     /* Numeric Literals */
     {IntegerLiteral}                { return symbol(sym.INT_LITERAL, yytext()); }
     {IllegalIntegerLiteral}         { return symbol(sym.BADCHAR, yytext()); }
+
+    {FloatLiteral}                  { return symbol(sym.FLOAT_LITERAL, yytext()); }
+    {IllegalFloatLiteral}           { return symbol(sym.BADCHAR, yytext()); }
 
     // NB: Negative integers handled via unary minus
     // NB: Rationals handled via division
