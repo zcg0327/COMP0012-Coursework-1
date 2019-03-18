@@ -160,6 +160,4 @@ public class SourcesIT {
         );
         assertSuccessfulLex("p-adt.s");
     }
-
-    // TODO
 }
