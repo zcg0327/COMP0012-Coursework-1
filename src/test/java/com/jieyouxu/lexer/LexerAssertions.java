@@ -4,8 +4,7 @@ import com.jieyouxu.Lexer;
 import com.jieyouxu.sym;
 import org.junit.jupiter.api.Assertions;
 
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +28,10 @@ public class LexerAssertions {
         setupLexer(input);
         setupIterator(expectedSymbols);
 
+        checkSymbols();
+    }
+
+    private static void checkSymbols() {
         try {
             assertSymbolsMatchInOrder();
             assertEndOfInput();
@@ -37,9 +40,21 @@ public class LexerAssertions {
         }
     }
 
+    public static void assertSymbolsMatch(Reader reader, List<Integer> expectedSymbols) {
+        setupLexer(reader);
+        setupIterator(expectedSymbols);
+
+        checkSymbols();
+    }
+
     private static void setupLexer(String input) {
         Objects.requireNonNull(input);
         lexer = new Lexer(new StringReader(input));
+    }
+
+    private static void setupLexer(Reader reader) {
+        Objects.requireNonNull(reader);
+        lexer = new Lexer(reader);
     }
 
     private static void setupIterator(List<Integer> symbols) {
@@ -51,7 +66,14 @@ public class LexerAssertions {
         while (symbolIterator.hasNext()) {
             int nextActualSymbol = lexer.next_token().sym;
             int nextExpectedSymbol = symbolIterator.next();
-            assertEquals(nextExpectedSymbol, nextActualSymbol);
+
+            if (nextExpectedSymbol != nextActualSymbol) {
+                fail(
+                    "\n"
+                    + "Expected: " + sym.terminalNames[nextExpectedSymbol] + "\n"
+                    + "Actual: " + sym.terminalNames[nextActualSymbol] + "\n"
+                );
+            }
         }
     }
 
