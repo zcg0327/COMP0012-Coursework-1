@@ -139,16 +139,12 @@ non terminal  zsec_program,
               print_statement,
               function_call_statement,
               if_statement,
+              if_else_statement,
               loop_statement,
               break_statement,
               return_statement,
-              matched_if_statement,
-              unmatched_if_statement,
-              other_statement,
               slicing_expression,
-              field_access_expression,
-              matched_if_statement_list,
-              unmatched_if_statement_list
+              field_access_expression
               ;
 
 
@@ -167,6 +163,11 @@ non terminal  zsec_program,
 // = !=                 // Equality, inequality (no assoc.)
 // &&                   // And (left assoc.)
 // ||                   // Or (left assoc.)
+// IF                   // Higher precedence
+// ELSE                 // Lower precendence to bind to nearest IF
+precedence nonassoc IF;
+precedence nonassoc ELSE;
+
 precedence left     OR;
 precedence left     AND;
 precedence nonassoc EQ, NEQ;
@@ -304,19 +305,23 @@ primitive_type_expression ::= primitive_type security_label;
 
 sequence_type_expression  ::= SEQ LANGLE sequence_type RANGLE;
 
-statement ::= if_statement;
+statement ::= variable_declaration_statement
+          |   datatype_declaration_statement
+          |   assignment_statement
+          |   alias_statement
+          |   input_statement
+          |   print_statement
+          |   function_call_statement
+          |   loop_statement
+          |   break_statement
+          |   return_statement
+          |   if_statement
+          |   if_else_statement
+          ;
 
-other_statement ::= variable_declaration_statement
-                |   datatype_declaration_statement
-                |   assignment_statement
-                |   alias_statement
-                |   input_statement
-                |   print_statement
-                |   function_call_statement
-                |   loop_statement
-                |   break_statement
-                |   return_statement
-                ;
+if_statement  ::= IF LPAREN expression RPAREN THEN statement_list FI;
+
+if_else_statement ::= IF LPAREN expression RPAREN THEN statement_list ELSE statement_list FI;
 
 primitive_type  ::= BOOL
                 |   INT
@@ -345,27 +350,6 @@ input_statement ::= READ IDENTIFIER SEMICOLON;
 print_statement ::= PRINT expression SEMICOLON;
 
 function_call_statement ::= function_call_expression SEMICOLON;
-
-if_statement  ::= matched_if_statement
-              |   unmatched_if_statement
-              ;
-
-matched_if_statement_list ::= matched_if_statement
-                          |   matched_if_statement matched_if_statement_list
-                          ;
-
-matched_if_statement  ::= IF LPAREN expression RPAREN THEN matched_if_statement_list ELSE matched_if_statement_list FI
-                      |   other_statement
-                      ;
-
-unmatched_if_statement_list ::= unmatched_if_statement
-                            |   unmatched_if_statement unmatched_if_statement_list
-                            ;
-
-unmatched_if_statement  ::= IF LPAREN expression RPAREN THEN matched_if_statement_list FI
-                        |   IF LPAREN expression RPAREN THEN unmatched_if_statement_list FI
-                        |   IF LPAREN expression RPAREN THEN matched_if_statement_list ELSE unmatched_if_statement_list FI
-                        ;
 
 loop_statement  ::= LOOP statement_list POOL;
 

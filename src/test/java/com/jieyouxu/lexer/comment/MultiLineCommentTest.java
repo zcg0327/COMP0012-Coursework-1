@@ -11,7 +11,11 @@ public class MultiLineCommentTest {
     public void assertMultiLineCommentShouldProduceNoSymbols() {
         LexerAssertions.assertEmptyLex("/##/");
         LexerAssertions.assertEmptyLex("/#\n#/");
+        LexerAssertions.assertEmptyLex("/#\n\n\n\n\n#/");
         LexerAssertions.assertEmptyLex("/###/");
+        LexerAssertions.assertEmptyLex("/##//##/");
+        LexerAssertions.assertEmptyLex("/#\n\n\n#/ \n\n\n /#\n\n\n#/");
+        LexerAssertions.assertEmptyLex("/# do something else #/");
         LexerAssertions.assertEmptyLex("/#/##/");
         LexerAssertions.assertEmptyLex("/#abc123!@#$%^&*()#1#/");
         LexerAssertions.assertEmptyLex("/# # ##/");

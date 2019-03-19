@@ -6,7 +6,7 @@ public class InteractiveLexer {
     public static void main(String[] args) {
         System.out.println(":: Lexer ::");
 
-        String file = "src/main/resources/open-test-cases/p-seq.s";
+        String file = "src/main/resources/open-test-cases/p-multiline-comment.s";
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             Lexer lexer = new Lexer(reader);
             printTokens(lexer);
