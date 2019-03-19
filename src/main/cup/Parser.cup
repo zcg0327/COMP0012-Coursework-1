@@ -17,6 +17,7 @@ parser code {:
 
 :};
 
+
 scan with {: return lexer.next_token(); :};
 
 
@@ -92,11 +93,60 @@ terminal    ASSIGN,                                 // :=
             DOT                                     // .
             ;
 
+terminal    UNARY_MINUS, UNARY_PLUS;
+
 terminal    BADCHAR;
+
 
 /* Non-terminals */
 
-non terminal  zsec_program;
+non terminal  zsec_program,
+              top_level_statement_list,
+              main_function_declaration_statement,
+              top_level_statement,
+              statement_list,
+              variable_declaration_statement,
+              datatype_declaration_statement,
+              function_declaration_statement,
+              variable_declaration,
+              expression_list,
+              datatype_declaration,
+              function_declaration,
+              type_expression,
+              expression,
+              variable_declaration_list,
+              formal_parameter_list,
+              primitive_type_expression,
+              sequence_type_expression
+              ;
+
+
+/* Operator Precedence */
+
+// ()                   // Parentheses
+// x[] f()              // Function call, index
+// ::                   // Concatenation (right assoc.)
+// :                    // Slicing (no assoc.)
+// x.y                  // Field access (left assoc.)
+// ^                    // Exponentiation (right assoc.)
+// + - !                // Unary plus, unary minus, unary not (right assoc.)
+// * /                  // Binary mult, div (left assoc.)
+// + -                  // Binary plus, binary minus (left assoc.)
+// < <= in              // Less, less than, in (no assoc.)
+// = !=                 // Equality, inequality (no assoc.)
+// &&                   // And (left assoc.)
+// ||                   // Or (left assoc.)
+precedence left     OR;
+precedence left     AND;
+precedence nonassoc EQ, NEQ;
+precedence nonassoc LANGLE, LESS_EQ, IN;
+precedence left     PLUS, MINUS;
+precedence left     MULT, DIV;
+precedence right    NOT, UNARY_PLUS, UNARY_MINUS;
+precedence right    EXP;
+precedence left     DOT;
+precedence nonassoc COLON;
+precedence right    CONCAT;
 
 
 /* Production Rules */
@@ -142,82 +192,35 @@ type_expression ::= primitive_type_expression
                 |   IDENTIFIER
                 ;
 
-// OPERATOR PRECEDENCE (HIGH -> LOW)
-// ()                   // Parentheses
-// ::                   // Concatenation (right assoc.)
-// :                    // Slicing (no assoc.)
-// x[] f()              // Function call, index
-// x.y                  // Field access (left assoc.)
-// ^                    // Exponentiation (right assoc.)
-// + - !                // Unary plus, unary minus, unary not (right assoc.)
-// * /                  // Binary mult, div (left assoc.)
-// + -                  // Binary plus, binary minus (left assoc.)
-// < <= in              // Less, less than, in (no assoc.)
-// = !=                 // Equality, inequality (no assoc.)
-// &&                   // And (left assoc.)
-// ||                   // Or (left assoc.)
-expression  ::= or_part;
+expression  ::= expression OR expression
+            |   expression AND expression
+            |   expression EQ expression
+            |   expression NEQ expression
+            |   expression LANGLE expression
+            |   expression LESS_EQ expression
+            |   expression IN expression
+            |   expression PLUS expression
+            |   expression MINUS expression
+            |   expression MULT expression
+            |   expression DIV expression
+            |   PLUS expression                 %prec UNARY_PLUS
+            |   MINUS expression                %prec UNARY_MINUS
+            |   NOT expression
+            |   expression EXP expression
+            |   expression DOT expression
+            |   list_index_access_expression
+            |   function_call_expression
+            |   expression COLON expression
+            |   expression CONCAT expression
+            |   LPAREN expression RPAREN
+            |   value
+            ;
 
-or_part ::= or_expression OR and_part
-        |   and_part
-        ;
-
-and_part  ::= equality_part EQ equality_part
-          |   equality_part NEQ equality_part
-          |   equality_part
-          ;
-
-equality_part ::= comparison_membership_part LANGLE comparison_membership_part
-              |   comparison_membership_part LESS_EQ comparison_membership_part
-              |   comparison_membership_part IN comparison_membership_part
-              |   comparison_membership_part
-              ;
-
-comparison_membership_part  ::= comparison_membership_part PLUS add_part
-                            |   comparison_membership_part MINUS add_part
-                            |   add_part
-                            ;
-
-add_part  ::= add_part MULT mult_part
-          |   add_part DIV mult_part
-          |   mult_part
-          ;
-
-mult_part ::= unary;
-
-unary ::= PLUS unary
-      |   MINUS unary
-      |   NOT unary
-      |   exp_part
-      ;
-
-exp_part  ::= field_access_part EXP exp_part
-          |   field_access_part
-          ;
-
-field_access_part ::= field_access_part DOT IDENTIFIER
-                  |   function_call_and_index
-                  ;
-
-function_call_and_index ::= IDENTIFIER LBRACKET concat_part COLON concat_part RBRACKET
-                        |   IDENTIFIER LBRACKET COLON concat_part RBRACKET
-                        |   IDENTIFIER LBRACKET concat_part COLON RBRACKET
-                        |   IDENTIFIER LBRACKET COLON RBRACKET
-                        |   function_call_expression
-                        |   slicing_part
-                        ;
+list_index_access_expression  ::= IDENTIFIER LBRACKET expression RBRACKET;
 
 function_call_expression  ::= IDENTIFIER LPAREN expression_list RPAREN
                           |   IDENTIFIER LPAREN RPAREN
                           ;
-
-concat_part ::= group CONCAT concat_part
-            |   group
-            ;
-
-group ::= value
-      |   LPAREN expression LPAREN
-      ;
 
 value ::= IDENTIFIER
       |   literal
