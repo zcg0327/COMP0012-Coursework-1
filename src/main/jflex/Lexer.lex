@@ -174,8 +174,9 @@ IllegalFloatLiteral = {IllegalIntegerLiteral} "." {IllegalIntegerLiteral}
     "\\b"\'                         { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, '\b'); }
     "\\f"\'                         { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, '\f'); }
 
-    \\.                             {  return symbol(sym.BADCHAR, yycharat(0)); }
-    {LineTerminator}                {  return symbol(sym.BADCHAR, yycharat(0)); }
+    <<EOF>>                         { yybegin(YYINITIAL); return symbol(sym.BADCHAR, yytext()); }
+    \\.                             { return symbol(sym.BADCHAR, yycharat(0)); }
+    {LineTerminator}                { return symbol(sym.BADCHAR, yycharat(0)); }
 }
 
 
@@ -197,13 +198,11 @@ IllegalFloatLiteral = {IllegalIntegerLiteral} "." {IllegalIntegerLiteral}
     "\\b"                           { characters.append('\b'); }
     "\\f"                           { characters.append('\f'); }
 
-    \\.                             {  return symbol(sym.BADCHAR, yytext()); }
-    {LineTerminator}                {  return symbol(sym.BADCHAR, yytext()); }
+    <<EOF>>                         { yybegin(YYINITIAL); return symbol(sym.BADCHAR, yytext()); }
+    \\.                             { return symbol(sym.BADCHAR, yytext()); }
+    {LineTerminator}                { return symbol(sym.BADCHAR, yytext()); }
 }
 
 
 // Error
 [^]                                 { return symbol(sym.BADCHAR, yytext()); }
-
-
-<<EOF>>                             { return symbol(sym.EOF); }

@@ -78,7 +78,7 @@ public class LexerAssertions {
     }
 
     private static void assertEndOfInput() throws IOException {
-        Assertions.assertEquals(sym.EOF, lexer.next_token().sym);
+        assertEquals(sym.EOF, lexer.next_token().sym);
     }
 
     public static void assertSymbolDoNotMatch(String input, int unexpectedSymbol) {
@@ -116,7 +116,7 @@ public class LexerAssertions {
 
         try {
             int nextActualToken = lexer.next_token().sym;
-            if (nextActualToken != sym.BADCHAR && nextActualToken != sym.EOF) {
+            if (nextActualToken != sym.BADCHAR) {
                 fail("Actual Symbol: " + sym.terminalNames[nextActualToken]);
             }
         } catch (IOException e) {
