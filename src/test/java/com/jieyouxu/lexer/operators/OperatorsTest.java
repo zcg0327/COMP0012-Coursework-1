@@ -46,6 +46,7 @@ public class OperatorsTest {
         LexerAssertions.assertSymbolMatches("-", sym.MINUS);
         LexerAssertions.assertSymbolMatches("/", sym.DIV);
         LexerAssertions.assertSymbolMatches("*", sym.MULT);
+        LexerAssertions.assertSymbolMatches("^", sym.EXP);
     }
 
     private void testLogicOperators() {

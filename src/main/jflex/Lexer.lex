@@ -125,6 +125,7 @@ IllegalFloatLiteral = {IllegalIntegerLiteral} "." {IllegalIntegerLiteral}
     "-"                             { return symbol(sym.MINUS); }
     "*"                             { return symbol(sym.MULT); }
     "/"                             { return symbol(sym.DIV); }
+    "^"                             { return symbol(sym.EXP); }
 
     // Logic
     "!"                             { return symbol(sym.NOT); }
