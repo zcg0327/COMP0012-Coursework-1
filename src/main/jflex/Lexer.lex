@@ -28,10 +28,9 @@ LineTerminator = \r | \n | \r\n
 Whitespace = {LineTerminator} | " " | \t | \f
 InputCharacter = [^\r\n]
 
-Comment = {SingleLineComment} | {MultiLineComment}
+Comment = {MultiLineComment} | {SingleLineComment}
 
-MultiLineComment = "/#" {MultiLineCommentContent}* [#]+ "/"
-MultiLineCommentContent = ( [^#] | ( [#]+ [^\/]* ) )*
+MultiLineComment = "/#" [^#]* ~"#/"
 
 SingleLineComment = "#" {InputCharacter}* {LineTerminator}?
 
