@@ -96,199 +96,211 @@ terminal    BADCHAR;
 
 /* Non-terminals */
 
-// TODO
-non terminal zsec_program;
+non terminal  zsec_program;
 
-zsec_program  ::= IDENTIFIER;
 
 /* Production Rules */
 
 // NB: Minimum required is a main function declaration, with optional
 // declaration statements before and after.
-// zsec_program ::= top_level_statement_list main_function_declaration_statement top_level_statement_list;
+zsec_program ::= top_level_statement_list main_function_declaration_statement top_level_statement_list;
 
-// top_level_statement_list  ::= top_level_statement
-//                           |   top_level_statement top_level_statement_list
-//                           |   /* empty */
-//                           ;
+top_level_statement_list  ::= top_level_statement
+                          |   top_level_statement top_level_statement_list
+                          |   /* empty */
+                          ;
 
-// main_function_declaration_statement ::= MAIN LBRACE statement_list RBRACE SEMICOLON;
+main_function_declaration_statement ::= MAIN LBRACE statement_list RBRACE SEMICOLON;
 
-// top_level_statement ::= variable_declaration_statement
-//                     |   datatype_declaration_statement
-//                     |   function_declaration_statement
-//                     ;
+top_level_statement ::= variable_declaration_statement
+                    |   datatype_declaration_statement
+                    |   function_declaration_statement
+                    ;
 
-// variable_declaration_statement  ::= variable_declaration SEMICOLON
-//                                 |   variable_declaration ASSIGN expression_list SEMICOLON
-//                                 ;
+variable_declaration_statement  ::= variable_declaration SEMICOLON
+                                |   variable_declaration ASSIGN expression_list SEMICOLON
+                                ;
 
-// datatype_declaration_statement  ::= datatype_declaration SEMICOLON;
+datatype_declaration_statement  ::= datatype_declaration SEMICOLON;
 
-// function_declaration_statement  ::= function_declaration SEMICOLON;
+function_declaration_statement  ::= function_declaration SEMICOLON;
 
-// variable_declaration  ::= IDENTIFIER COLON type_expression;
+variable_declaration  ::= IDENTIFIER COLON type_expression;
 
-// expression_list ::= expression
-//                 |   expression COMMA expression_list
-//                 ;
+expression_list ::= expression
+                |   expression COMMA expression_list
+                ;
 
-// datatype_declaration  ::= TDEF IDENTIFIER LBRACE variable_declaration_list RBRACE;
+datatype_declaration  ::= TDEF IDENTIFIER LBRACE variable_declaration_list RBRACE;
 
-// function_declaration  ::= FDEF IDENTIFIER LPAREN formal_parameter_list RPAREN LBRACE statement_list RBRACE
-//                       |   FDEF IDENTIFIER LPAREN formal_parameter_list RPAREN LBRACE statement_list RBRACE COLON type_expression
-//                       ;
+function_declaration  ::= FDEF IDENTIFIER LPAREN formal_parameter_list RPAREN LBRACE statement_list RBRACE
+                      |   FDEF IDENTIFIER LPAREN formal_parameter_list RPAREN LBRACE statement_list RBRACE COLON type_expression
+                      ;
 
-// type_expression ::= primitive_type_expression
-//                 |   sequence_type_expression
-//                 |   IDENTIFIER
-//                 ;
+type_expression ::= primitive_type_expression
+                |   sequence_type_expression
+                |   IDENTIFIER
+                ;
 
-// // TODO: CONCAT
-// // OPERATOR PRECEDENCE (HIGH -> LOW)
-// // ()                  // Parentheses
-// // f()                 // Function call
-// // x[]                 // Slicing
-// // x.y                 // Field access (left assoc.)
-// // ^                   // Exponentiation (right assoc.)
-// // + - !               // Unary plus, unary minus, unary not (right assoc.)
-// // * /                 // Binary mult, div (left assoc.)
-// // + -                 // Binary plus, binary minus (left assoc.)
-// // < <= in             // Less, less than, in (no assoc.)
-// // = !=                // Equality, inequality (no assoc.)
-// // &&                  // And (left assoc.)
-// // ||                  // Or (left assoc.)
-// expression  ::= or_part;
+// OPERATOR PRECEDENCE (HIGH -> LOW)
+// ()                   // Parentheses
+// ::                   // Concatenation (right assoc.)
+// :                    // Slicing (no assoc.)
+// x[] f()              // Function call, index
+// x.y                  // Field access (left assoc.)
+// ^                    // Exponentiation (right assoc.)
+// + - !                // Unary plus, unary minus, unary not (right assoc.)
+// * /                  // Binary mult, div (left assoc.)
+// + -                  // Binary plus, binary minus (left assoc.)
+// < <= in              // Less, less than, in (no assoc.)
+// = !=                 // Equality, inequality (no assoc.)
+// &&                   // And (left assoc.)
+// ||                   // Or (left assoc.)
+expression  ::= or_part;
 
-// or_part ::= or_expression OR and_part
-//         |   and_part
-//         ;
+or_part ::= or_expression OR and_part
+        |   and_part
+        ;
 
-// and_part  ::= equality_part EQ equality_part
-//           |   equality_part NEQ equality_part
-//           |   equality_part
-//           ;
+and_part  ::= equality_part EQ equality_part
+          |   equality_part NEQ equality_part
+          |   equality_part
+          ;
 
-// equality_part ::= comparison_membership_part LANGLE comparison_membership_part
-//               |   comparison_membership_part LESS_EQ comparison_membership_part
-//               |   comparison_membership_part IN comparison_membership_part
-//               |   comparison_membership_part
-//               ;
+equality_part ::= comparison_membership_part LANGLE comparison_membership_part
+              |   comparison_membership_part LESS_EQ comparison_membership_part
+              |   comparison_membership_part IN comparison_membership_part
+              |   comparison_membership_part
+              ;
 
-// comparison_membership_part  ::= comparison_membership_part PLUS add_part
-//                             |   comparison_membership_part MINUS add_part
-//                             |   add_part
-//                             ;
+comparison_membership_part  ::= comparison_membership_part PLUS add_part
+                            |   comparison_membership_part MINUS add_part
+                            |   add_part
+                            ;
 
-// add_part  ::= add_part MULT mult_part
-//           |   add_part DIV mult_part
-//           |   mult_part
-//           ;
+add_part  ::= add_part MULT mult_part
+          |   add_part DIV mult_part
+          |   mult_part
+          ;
 
-// mult_part ::= unary;
+mult_part ::= unary;
 
-// unary ::= PLUS unary
-//       |   MINUS unary
-//       |   NOT unary
-//       |   exp_part
-//       ;
+unary ::= PLUS unary
+      |   MINUS unary
+      |   NOT unary
+      |   exp_part
+      ;
 
-// exp_part  ::= field_access_part EXP exp_part
-//           |   field_access_part
-//           ;
+exp_part  ::= field_access_part EXP exp_part
+          |   field_access_part
+          ;
 
-// field_access_part ::= field_access_part DOT IDENTIFIER
-//                   |   group
-//                   ;
+field_access_part ::= field_access_part DOT IDENTIFIER
+                  |   function_call_and_index
+                  ;
 
-// group ::= value
-//       |   value LBRACKET expression RBRACKET
-//       |   value LPAREN expression_list RPAREN
-//       |   LPAREN expression LPAREN
-//       ;
+function_call_and_index ::= IDENTIFIER LBRACKET concat_part COLON concat_part RBRACKET
+                        |   IDENTIFIER LBRACKET COLON concat_part RBRACKET
+                        |   IDENTIFIER LBRACKET concat_part COLON RBRACKET
+                        |   IDENTIFIER LBRACKET COLON RBRACKET
+                        |   function_call_expression
+                        |   slicing_part
+                        ;
 
-// value ::= IDENTIFIER
-//       |   literal
-//       ;
+function_call_expression  ::= IDENTIFIER LPAREN expression_list RPAREN
+                          |   IDENTIFIER LPAREN RPAREN
+                          ;
 
-// literal ::= INT_LITERAL
-//         |   FLOAT_LITERAL
-//         |   RAT_LITERAL
-//         |   CHAR_LITERAL
-//         |   STRING_LITERAL
-//         |   bool_literal
-//         |   list_literal
-//         ;
+concat_part ::= group CONCAT concat_part
+            |   group
+            ;
 
-// bool_literal  ::= TRUE
-//               |   FALSE
-//               ;
+group ::= value
+      |   LPAREN expression LPAREN
+      ;
 
-// list_literal  ::= empty_list_literal
-//               |   LBRACKET expression_list RBRACKET
-//               ;
+value ::= IDENTIFIER
+      |   literal
+      ;
 
-// empty_list_literal  ::= LBRACKET RBRACKET;
+literal ::= INT_LITERAL
+        |   FLOAT_LITERAL
+        |   RAT_LITERAL
+        |   CHAR_LITERAL
+        |   STRING_LITERAL
+        |   bool_literal
+        |   list_literal
+        ;
 
-// variable_declaration_list ::= variable_declaration
-//                           |   variable_declaration COMMA variable_declaration_list
-//                           ;
+bool_literal  ::= TRUE
+              |   FALSE
+              ;
 
-// formal_parameter_list ::= variable_declaration_list
-//                       |   /* empty */
-//                       ;
+list_literal  ::= empty_list_literal
+              |   LBRACKET expression_list RBRACKET
+              ;
 
-// statement_list  ::= statement
-//                 |   statement statement_list
-//                 ;
+empty_list_literal  ::= LBRACKET RBRACKET;
 
-// primitive_type_expression ::= primitive_type security_label;
+variable_declaration_list ::= variable_declaration
+                          |   variable_declaration COMMA variable_declaration_list
+                          ;
 
-// sequence_type_expression  ::= SEQ LANGLE sequence_type RANGLE;
+formal_parameter_list ::= variable_declaration_list
+                      |   /* empty */
+                      ;
 
-// statement ::= variable_declaration_statement
-//           |   datatype_declaration_statement
-//           |   assignment_statement
-//           |   input_statement
-//           |   print_statement
-//           |   function_call_statement
-//           |   if_statement
-//           |   loop_statement
-//           |   break_statement
-//           |   return_statement
-//           ;
+statement_list  ::= statement
+                |   statement statement_list
+                ;
 
-// primitive_type  ::= BOOL
-//                 |   INT
-//                 |   RAT
-//                 |   FLOAT
-//                 |   CHAR
-//                 ;
+primitive_type_expression ::= primitive_type security_label;
 
-// security_label  ::= SECURITY_LOW
-//                 |   SECURITY_HIGH
-//                 ;
+sequence_type_expression  ::= SEQ LANGLE sequence_type RANGLE;
 
-// sequence_type   ::= primitive_type_expression
-//                 |   TOP security_label
-//                 |   IDENTIFIER
-//                 ;
+statement ::= variable_declaration_statement
+          |   datatype_declaration_statement
+          |   assignment_statement
+          |   input_statement
+          |   print_statement
+          |   function_call_statement
+          |   if_statement
+          |   loop_statement
+          |   break_statement
+          |   return_statement
+          ;
 
-// assignment_statement  ::= IDENTIFIER ASSIGN expression COLON;
+primitive_type  ::= BOOL
+                |   INT
+                |   RAT
+                |   FLOAT
+                |   CHAR
+                ;
 
-// input_statement ::= READ IDENTIFIER COLON;
+security_label  ::= SECURITY_LOW
+                |   SECURITY_HIGH
+                ;
 
-// print_statement ::= expression COLON;
+sequence_type   ::= primitive_type_expression
+                |   TOP security_label
+                |   IDENTIFIER
+                ;
 
-// function_call_statement ::= IDENTIFIER LPAREN expression_list RPAREN COLON;
+assignment_statement  ::= IDENTIFIER ASSIGN expression COLON;
 
-// // TODO
-// //if_statement  ::=
+input_statement ::= READ IDENTIFIER COLON;
 
-// loop_statement  ::= LOOP statement_list POOL COLON;
+print_statement ::= expression COLON;
 
-// break_statement ::= BREAK COLON
-//                 |   BREAK INT_LITERAL COLON
-//                 ;
+function_call_statement ::= function_call_expression COLON;
 
-// return_statement  ::= RETURN expression COLON;
+// TODO
+//if_statement  ::=
+
+loop_statement  ::= LOOP statement_list POOL COLON;
+
+break_statement ::= BREAK COLON
+                |   BREAK INT_LITERAL COLON
+                ;
+
+return_statement  ::= RETURN expression COLON;
