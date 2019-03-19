@@ -112,6 +112,7 @@ non terminal  zsec_program,
               variable_declaration_statement,
               datatype_declaration_statement,
               function_declaration_statement,
+              alias_statement,
               variable_declaration,
               expression_list,
               datatype_declaration,
@@ -121,7 +122,29 @@ non terminal  zsec_program,
               variable_declaration_list,
               formal_parameter_list,
               primitive_type_expression,
-              sequence_type_expression
+              sequence_type_expression,
+              list_index_access_expression,
+              function_call_expression,
+              value,
+              literal,
+              bool_literal,
+              list_literal,
+              empty_list_literal,
+              statement,
+              primitive_type,
+              security_label,
+              sequence_type,
+              assignment_statement,
+              input_statement,
+              print_statement,
+              function_call_statement,
+              if_statement,
+              loop_statement,
+              break_statement,
+              return_statement,
+              matched_if_statement,
+              unmatched_if_statement,
+              other_statement
               ;
 
 
@@ -157,11 +180,13 @@ precedence right    CONCAT;
 
 // NB: Minimum required is a main function declaration, with optional
 // declaration statements before and after.
-zsec_program ::= top_level_statement_list main_function_declaration_statement top_level_statement_list;
+zsec_program  ::= top_level_statement_list main_function_declaration_statement top_level_statement_list
+              |   main_function_declaration_statement top_level_statement_list
+              |   top_level_statement_list main_function_declaration_statement
+              ;
 
 top_level_statement_list  ::= top_level_statement
                           |   top_level_statement top_level_statement_list
-                          |   /* empty */
                           ;
 
 main_function_declaration_statement ::= MAIN LBRACE statement_list RBRACE SEMICOLON;
@@ -169,6 +194,7 @@ main_function_declaration_statement ::= MAIN LBRACE statement_list RBRACE SEMICO
 top_level_statement ::= variable_declaration_statement
                     |   datatype_declaration_statement
                     |   function_declaration_statement
+                    |   alias_statement
                     ;
 
 variable_declaration_statement  ::= variable_declaration SEMICOLON
@@ -178,6 +204,8 @@ variable_declaration_statement  ::= variable_declaration SEMICOLON
 datatype_declaration_statement  ::= datatype_declaration SEMICOLON;
 
 function_declaration_statement  ::= function_declaration SEMICOLON;
+
+alias_statement ::= ALIAS IDENTIFIER IDENTIFIER SEMICOLON;
 
 variable_declaration  ::= IDENTIFIER COLON type_expression;
 
@@ -214,6 +242,7 @@ expression  ::= expression OR expression
             |   expression DOT expression
             |   list_index_access_expression
             |   function_call_expression
+            |   LEN LPAREN expression RPAREN
             |   expression COLON expression
             |   expression CONCAT expression
             |   LPAREN expression RPAREN
@@ -228,6 +257,7 @@ function_call_expression  ::= IDENTIFIER LPAREN expression_list RPAREN
 
 value ::= IDENTIFIER
       |   literal
+      |   BADCHAR:b                                                                     {: syntax_error(b); :}
       ;
 
 literal ::= INT_LITERAL
@@ -265,17 +295,18 @@ primitive_type_expression ::= primitive_type security_label;
 
 sequence_type_expression  ::= SEQ LANGLE sequence_type RANGLE;
 
-statement ::= variable_declaration_statement
-          |   datatype_declaration_statement
-          |   assignment_statement
-          |   input_statement
-          |   print_statement
-          |   function_call_statement
-          |   if_statement
-          |   loop_statement
-          |   break_statement
-          |   return_statement
-          ;
+statement ::= if_statement;
+
+other_statement ::= variable_declaration_statement
+                |   datatype_declaration_statement
+                |   assignment_statement
+                |   input_statement
+                |   print_statement
+                |   function_call_statement
+                |   loop_statement
+                |   break_statement
+                |   return_statement
+                ;
 
 primitive_type  ::= BOOL
                 |   INT
@@ -297,7 +328,7 @@ assignment_statement  ::= IDENTIFIER ASSIGN expression COLON;
 
 input_statement ::= READ IDENTIFIER COLON;
 
-print_statement ::= expression COLON;
+print_statement ::= PRINT expression COLON;
 
 function_call_statement ::= function_call_expression COLON;
 
@@ -306,12 +337,12 @@ if_statement  ::= matched_if_statement
               ;
 
 matched_if_statement  ::= IF LPAREN expression RPAREN THEN matched_if_statement ELSE matched_if_statement FI
-                      |   statement
+                      |   other_statement
                       ;
 
 unmatched_if_statement  ::= IF LPAREN expression RPAREN THEN matched_if_statement FI
-                        |   IF LPAREN expression RPAREN unmatched_if_statement FI
-                        |   IF LPAREN expression RPAREN matched_if_statement ELSE unmatched_if_statement
+                        |   IF LPAREN expression RPAREN THEN unmatched_if_statement FI
+                        |   IF LPAREN expression RPAREN THEN matched_if_statement ELSE unmatched_if_statement FI
                         ;
 
 loop_statement  ::= LOOP statement_list POOL COLON;
