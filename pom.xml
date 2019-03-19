@@ -91,6 +91,7 @@
           <outputDirectory>src/main/java</outputDirectory>
           <expectedConflicts>0</expectedConflicts>
           <progress>true</progress>
+          <verbose>true</verbose>
         </configuration>
       </plugin>
 
