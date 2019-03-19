@@ -2,7 +2,7 @@ PARAGRAPH:    3
 PROBLEM:      Multiline comments `/# ... #/` was stated to be able to include
               "any character, including newlines." But to pair comment
               delimiters, a multiline comment cannot contain the end-of-comment
-              character sequence `/#` within the contents, i.e. `/# #/ #/`.
+              character sequence `#/` within the contents, i.e. `/# #/ #/`.
 SOLUTION:     The specification should specify that multiline comments can
               include any characters, including newlines, with the exception
               of the end-of-comment character sequence `#/`. This is required
@@ -64,11 +64,9 @@ SOLUTION:     The keyword type `top` should still be reserved, but its usage
 PARAGRAPH:    9
 PROBLEM:      The specification does not specify whether trailing commas in a
               sequence literal is supported.
-SOLUTION:     By default, trailing commas are supported as with many other
-              programming languages, such as Java or JavaScript. Trailing commas
-              serve as syntax sugar only, and does not otherwise change
-              semantics.
-              e.g.   a : seq<int L> := [1, 2, 3,]
+SOLUTION:     Trailing comma is not supported, consistent with languages such 
+              as Java.
+              e.g.   a : seq<int L> := [1, 2, 3]
 
 PARAGRAPH:    10
 PROBLEM:      The specification does not specify that for string literals,
@@ -103,11 +101,18 @@ SOLUTION:     This should be accepted as valid syntax, as suggested on page 1 of
               the specification, since many other languages which do support
               slicing allows it.
 
+PARAGRAPH:    12
+PROBLEM:      The specification does not specify whether `len`, the length of
+              list function, is a keyword.
+SOLUTION:     The `len` function should not be treated as a keyword, instead it
+              should be treated as an ordinary function. This is consistent with
+              open test-cases whether a field can be named `len`.
+              e.g. `a.len := 5`
+
 PARAGRAPH:    13
 PROBLEM:      The specification does not state explicitly whether trailing comma
               is supported for `declaration_list`.
-SOLUTION:     Trailing comma is accepted, consistent with list literals, as
-              trailing commas do not otherwise change semantics.
+SOLUTION:     Trailing comma is not accepted, consistent with list literals.
 
 PARAGRAPH:    13
 PROBLEM:      The specification does not state explicitly whether
