@@ -18,7 +18,6 @@ public class KeywordsTest {
         LexerAssertions.assertSymbolMatches("float", sym.FLOAT);
         LexerAssertions.assertSymbolMatches("seq", sym.SEQ);
         LexerAssertions.assertSymbolMatches("top", sym.TOP);
-        LexerAssertions.assertSymbolMatches("len", sym.LEN);
         LexerAssertions.assertSymbolMatches("in", sym.IN);
         LexerAssertions.assertSymbolMatches("tdef", sym.TDEF);
         LexerAssertions.assertSymbolMatches("alias", sym.ALIAS);

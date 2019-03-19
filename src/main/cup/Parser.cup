@@ -39,7 +39,6 @@ terminal    IDENTIFIER,                             // id
             FLOAT,                                  // float
             SEQ,                                    // seq
             TOP,                                    // top
-            LEN,                                    // len
             IN,                                     // in
             TDEF,                                   // Type definition
             ALIAS,                                  // Type alias
@@ -145,7 +144,11 @@ non terminal  zsec_program,
               return_statement,
               matched_if_statement,
               unmatched_if_statement,
-              other_statement
+              other_statement,
+              slicing_expression,
+              field_access_expression,
+              matched_if_statement_list,
+              unmatched_if_statement_list
               ;
 
 
@@ -184,6 +187,7 @@ precedence right    CONCAT;
 zsec_program  ::= top_level_statement_list main_function_declaration_statement top_level_statement_list
               |   main_function_declaration_statement top_level_statement_list
               |   top_level_statement_list main_function_declaration_statement
+              |   main_function_declaration_statement
               ;
 
 top_level_statement_list  ::= top_level_statement
@@ -206,7 +210,7 @@ datatype_declaration_statement  ::= datatype_declaration SEMICOLON;
 
 function_declaration_statement  ::= function_declaration SEMICOLON;
 
-alias_statement ::= ALIAS IDENTIFIER IDENTIFIER SEMICOLON;
+alias_statement ::= ALIAS type_expression IDENTIFIER SEMICOLON;
 
 variable_declaration  ::= IDENTIFIER COLON type_expression;
 
@@ -240,11 +244,10 @@ expression  ::= expression OR expression
             |   MINUS expression                %prec UNARY_MINUS
             |   NOT expression
             |   expression EXP expression
-            |   expression DOT expression
+            |   expression DOT IDENTIFIER
             |   list_index_access_expression
             |   function_call_expression
-            |   LEN LPAREN expression RPAREN
-            |   expression COLON expression
+            |   slicing_expression
             |   expression CONCAT expression
             |   LPAREN expression RPAREN
             |   value
@@ -256,9 +259,14 @@ function_call_expression  ::= IDENTIFIER LPAREN expression_list RPAREN
                           |   IDENTIFIER LPAREN RPAREN
                           ;
 
+slicing_expression  ::= expression COLON expression
+                    |   COLON expression
+                    |   expression COLON
+                    |   COLON
+                    ;
+
 value ::= IDENTIFIER
       |   literal
-      |   BADCHAR:b                                                                     {: syntax_error((Symbol) b); :}
       ;
 
 literal ::= INT_LITERAL
@@ -301,6 +309,7 @@ statement ::= if_statement;
 other_statement ::= variable_declaration_statement
                 |   datatype_declaration_statement
                 |   assignment_statement
+                |   alias_statement
                 |   input_statement
                 |   print_statement
                 |   function_call_statement
@@ -325,7 +334,11 @@ sequence_type   ::= primitive_type_expression
                 |   IDENTIFIER
                 ;
 
-assignment_statement  ::= IDENTIFIER ASSIGN expression SEMICOLON;
+assignment_statement  ::= field_access_expression ASSIGN expression SEMICOLON;
+
+field_access_expression ::= field_access_expression DOT IDENTIFIER
+                        |   IDENTIFIER
+                        ;
 
 input_statement ::= READ IDENTIFIER SEMICOLON;
 
@@ -337,16 +350,24 @@ if_statement  ::= matched_if_statement
               |   unmatched_if_statement
               ;
 
-matched_if_statement  ::= IF LPAREN expression RPAREN THEN matched_if_statement ELSE matched_if_statement FI
+matched_if_statement_list ::= matched_if_statement
+                          |   matched_if_statement matched_if_statement_list
+                          ;
+
+matched_if_statement  ::= IF LPAREN expression RPAREN THEN matched_if_statement_list ELSE matched_if_statement_list FI
                       |   other_statement
                       ;
 
-unmatched_if_statement  ::= IF LPAREN expression RPAREN THEN matched_if_statement FI
-                        |   IF LPAREN expression RPAREN THEN unmatched_if_statement FI
-                        |   IF LPAREN expression RPAREN THEN matched_if_statement ELSE unmatched_if_statement FI
+unmatched_if_statement_list ::= unmatched_if_statement
+                            |   unmatched_if_statement unmatched_if_statement_list
+                            ;
+
+unmatched_if_statement  ::= IF LPAREN expression RPAREN THEN matched_if_statement_list FI
+                        |   IF LPAREN expression RPAREN THEN unmatched_if_statement_list FI
+                        |   IF LPAREN expression RPAREN THEN matched_if_statement_list ELSE unmatched_if_statement_list FI
                         ;
 
-loop_statement  ::= LOOP statement_list POOL SEMICOLON;
+loop_statement  ::= LOOP statement_list POOL;
 
 break_statement ::= BREAK SEMICOLON
                 |   BREAK INT_LITERAL SEMICOLON

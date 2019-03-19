@@ -48,6 +48,9 @@ IllegalIntegerLiteral = {Underscore}*{IntegerLiteral}{Underscore}+
 FloatLiteral = {IntegerLiteral} "." {IntegerLiteral}
 IllegalFloatLiteral = {IllegalIntegerLiteral} "." {IllegalIntegerLiteral}
 
+RationalLiteral = {IntegerLiteral} "/" {IntegerLiteral}
+IllegalFloatLiteral = {IllegalIntegerLiteral} "/" {IllegalIntegerLiteral}
+
 %state CHARACTER_LITERAL
 %state STRING_LITERAL
 
@@ -64,7 +67,6 @@ IllegalFloatLiteral = {IllegalIntegerLiteral} "." {IllegalIntegerLiteral}
     "float"                         { return symbol(sym.FLOAT); }
     "seq"                           { return symbol(sym.SEQ); }
     "top"                           { return symbol(sym.TOP); }
-    "len"                           { return symbol(sym.LEN); }
     "in"                            { return symbol(sym.IN); }
     "tdef"                          { return symbol(sym.TDEF); }
     "alias"                         { return symbol(sym.ALIAS); }
@@ -92,11 +94,14 @@ IllegalFloatLiteral = {IllegalIntegerLiteral} "." {IllegalIntegerLiteral}
     {IntegerLiteral}                { return symbol(sym.INT_LITERAL, yytext()); }
     {IllegalIntegerLiteral}         { return symbol(sym.BADCHAR, yytext()); }
 
+    // NB: Negative integers handled via unary minus
+    // NB: Rationals handled via division
+
     {FloatLiteral}                  { return symbol(sym.FLOAT_LITERAL, yytext()); }
     {IllegalFloatLiteral}           { return symbol(sym.BADCHAR, yytext()); }
 
-    // NB: Negative integers handled via unary minus
-    // NB: Rationals handled via division
+    {RationalLiteral}               { return symbol(sym.RAT_LITERAL, yytext()); }
+    {IllegalFloatLiteral}           { return symbol(sym.BADCHAR, yytext()); }
 
     /* Operators */
 
