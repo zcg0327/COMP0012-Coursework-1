@@ -3,12 +3,16 @@ import java_cup.runtime.*;
 parser code {:
   private Lexer lexer;
 
+  public boolean syntaxErrors = false;
+
   public Parser(Lexer lexer) {
     super(lexer);
     this.lexer = lexer;
+    syntaxErrors = false;
   }
 
   public void syntax_error(Symbol current_token) {
+    syntaxErrors = true;
     report_error(
         "Syntax error at line " + (current_token.left+1) + ", column "
         + current_token.right + ". ", null
@@ -297,8 +301,18 @@ print_statement ::= expression COLON;
 
 function_call_statement ::= function_call_expression COLON;
 
-// TODO
-//if_statement  ::=
+if_statement  ::= matched_if_statement
+              |   unmatched_if_statement
+              ;
+
+matched_if_statement  ::= IF LPAREN expression RPAREN THEN matched_if_statement ELSE matched_if_statement FI
+                      |   statement
+                      ;
+
+unmatched_if_statement  ::= IF LPAREN expression RPAREN THEN matched_if_statement FI
+                        |   IF LPAREN expression RPAREN unmatched_if_statement FI
+                        |   IF LPAREN expression RPAREN matched_if_statement ELSE unmatched_if_statement
+                        ;
 
 loop_statement  ::= LOOP statement_list POOL COLON;
 
