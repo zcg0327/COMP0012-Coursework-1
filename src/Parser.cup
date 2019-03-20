@@ -17,7 +17,6 @@ parser code {:
         "Syntax error at line " + (current_token.left+1) + ", column "
         + current_token.right + ". ", null
     );
-    System.out.println(sym.terminalNames[current_token.sym]);
   }
 
 :};
