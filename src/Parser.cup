@@ -146,7 +146,8 @@ non terminal  zsec_program,
               slicing_expression,
               field_access_expression,
               statement_with_break,
-              statement_with_break_list
+              statement_with_break_list,
+              optional_fdef
               ;
 
 
@@ -194,10 +195,14 @@ zsec_program  ::= top_level_statement_list main_function_declaration_statement t
               ;
 
 top_level_statement_list  ::= top_level_statement
-                          |   top_level_statement top_level_statement_list
+                          |   top_level_statement_list top_level_statement 
                           ;
 
-main_function_declaration_statement ::= MAIN LBRACE statement_list RBRACE SEMICOLON;
+main_function_declaration_statement ::= optional_fdef MAIN LBRACE statement_list RBRACE SEMICOLON;
+
+optional_fdef ::= FDEF
+              |   /* empty */
+              ;
 
 top_level_statement ::= variable_declaration_statement
                     |   datatype_declaration_statement
