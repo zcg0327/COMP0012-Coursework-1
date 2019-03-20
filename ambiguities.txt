@@ -158,3 +158,12 @@ SOLUTION:     The specification should instead state that function calls are
               semi-colon (e.g. `fn();`). This is consistent with languages like
               Java and C. This ensures that function calls can be part of
               composite expressions such as `min(1, 2) + 2`.
+
+PARAGRAPH:    21 (Listing 5)
+PROBLEM:      The example program's function `reverse` has an incorrect syntax
+              because its return type is declared between `fdef` and the
+              function name.
+SOLUTION:     The example program's function `reverse` should have the signature
+              of:
+
+              `fdef reverse (inseq: seq<top L>) { ... } : set<top L>;
