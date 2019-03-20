@@ -44,3 +44,6 @@ buildNumber.properties
 **/Lexer.java
 **/Parser.java
 **/sym.java
+
+### Generated Test Result ###
+result.csv
