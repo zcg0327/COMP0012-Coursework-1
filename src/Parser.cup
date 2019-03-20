@@ -309,6 +309,7 @@ sequence_type_expression  ::= SEQ LANGLE sequence_type RANGLE;
 
 statement ::= variable_declaration_statement
           |   datatype_declaration_statement
+          |   function_declaration_statement
           |   assignment_statement
           |   alias_statement
           |   input_statement
