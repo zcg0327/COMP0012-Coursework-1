@@ -256,7 +256,7 @@ expression  ::= expression OR expression
             |   value
             ;
 
-list_index_access_expression  ::= IDENTIFIER LBRACKET expression RBRACKET;
+list_index_access_expression  ::= expression LBRACKET expression RBRACKET;
 
 function_call_expression  ::= IDENTIFIER LPAREN expression_list RPAREN
                           |   IDENTIFIER LPAREN RPAREN
