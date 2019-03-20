@@ -334,7 +334,8 @@ security_label  ::= SECURITY_LOW
                 |   SECURITY_HIGH
                 ;
 
-sequence_type   ::= primitive_type_expression
+sequence_type   ::= sequence_type_expression
+                |   primitive_type_expression
                 |   TOP security_label
                 |   IDENTIFIER
                 ;
