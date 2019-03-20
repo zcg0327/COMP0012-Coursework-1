@@ -164,6 +164,7 @@ non terminal  zsec_program,
 // = !=                 // Equality, inequality (no assoc.)
 // &&                   // And (left assoc.)
 // ||                   // Or (left assoc.)
+
 // IF                   // Higher precedence
 // ELSE                 // Lower precendence to bind to nearest IF
 precedence nonassoc IF;

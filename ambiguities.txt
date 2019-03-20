@@ -62,6 +62,13 @@ SOLUTION:     The keyword type `top` should still be reserved, but its usage
               would prevent effective type checking elsewhere.
 
 PARAGRAPH:    9
+PROBLEM:      The specification does not explicitly state whether nested sequence
+              type declaration is supported.
+SOLUTION:     Nested sequence type is supported (e.g. Java Generics supporting 
+              type declarations such as List<List<Integer>>). This is further
+              supported by the closed test case `p-nested-seq.s`.
+
+PARAGRAPH:    9
 PROBLEM:      The specification does not specify whether trailing commas in a
               sequence literal is supported.
 SOLUTION:     Trailing comma is not supported, consistent with languages such 
@@ -130,6 +137,12 @@ SOLUTION:     This does not seem to be the intended behaviour. Instead, the
               be used in a `declaration_list`.
 
 PARAGRAPH:    15
+PROBLEM:      The specification does not explicitly state whether functions
+              can be nested in other functions (i.e. nested function support).
+SOLUTION:     Nested function is supported; this is supported by the closed
+              test case `p-main.s`.
+
+PARAGRAPH:    15
 PROBLEM:      The specification does not explicitly state whether a function's
               parameter list can be empty.
 SOLUTION:     A function taking zero parameters should be valid, and so an empty
@@ -166,4 +179,4 @@ PROBLEM:      The example program's function `reverse` has an incorrect syntax
 SOLUTION:     The example program's function `reverse` should have the signature
               of:
 
-              `fdef reverse (inseq: seq<top L>) { ... } : set<top L>;
+              `fdef reverse (inseq: seq<top L>) { ... } : set<top L>;`
