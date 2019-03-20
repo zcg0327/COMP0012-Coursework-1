@@ -144,7 +144,9 @@ non terminal  zsec_program,
               break_statement,
               return_statement,
               slicing_expression,
-              field_access_expression
+              field_access_expression,
+              statement_with_break,
+              statement_with_break_list
               ;
 
 
@@ -313,15 +315,14 @@ statement ::= variable_declaration_statement
           |   print_statement
           |   function_call_statement
           |   loop_statement
-          |   break_statement
           |   return_statement
           |   if_statement
           |   if_else_statement
           ;
 
-if_statement  ::= IF LPAREN expression RPAREN THEN statement_list FI;
+if_statement  ::= IF LPAREN expression RPAREN THEN statement_with_break_list FI;
 
-if_else_statement ::= IF LPAREN expression RPAREN THEN statement_list ELSE statement_list FI;
+if_else_statement ::= IF LPAREN expression RPAREN THEN statement_with_break_list ELSE statement_with_break_list FI;
 
 primitive_type  ::= BOOL
                 |   INT
@@ -352,7 +353,15 @@ print_statement ::= PRINT expression SEMICOLON;
 
 function_call_statement ::= function_call_expression SEMICOLON;
 
-loop_statement  ::= LOOP statement_list POOL;
+statement_with_break  ::=  statement
+                      |    break_statement
+                      ;
+
+statement_with_break_list ::= statement_with_break
+                          |   statement_with_break statement_with_break_list
+                          ;
+
+loop_statement  ::= LOOP statement_with_break_list POOL;
 
 break_statement ::= BREAK SEMICOLON
                 |   BREAK INT_LITERAL SEMICOLON
